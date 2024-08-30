@@ -13,31 +13,77 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//Defining the relationship between the tables for better understanding
+//Competition Model has a one-to-many relationship with Division Model
+//Division Model has a one-to-many relationship with Teams Model
+//Teams Model has a one-to-many relationship with Player Model
+
+
+//Competition Model
 model Competition {
-  id           Int          @id @default(autoincrement())
-  name         String
-  divisions    Division[]
+  id        Int        @id @default(autoincrement())
+  name      String
+  divisions Division[] // Relation to Division
+  rules     Rules[]    // Relation to Rules
 }
 
+//Division Model
 model Division {
-  id           Int          @id @default(autoincrement())
-  name         String
-  competition  Competition @relation(fields: [competitionId], references: [id])
+  id            Int        @id @default(autoincrement())
   competitionId Int
-  teams        Team[]
+  name          String
+  competition   Competition @relation(fields: [competitionId], references: [id])
+  teams         Teams[]     // Relation to Teams
+  rules         Rules[]     // Relation to Rules
 }
 
-model Team {
-  id           Int          @id @default(autoincrement())
-  name         String
-  division     Division    @relation(fields: [divisionId], references: [id])
-  divisionId   Int
-  players      Player[]
+//Teams Model
+model Teams {
+  id         Int       @id @default(autoincrement())
+  divisionId Int
+  name       String
+  division   Division  @relation(fields: [divisionId], references: [id])
+  players    Player[]  // Relation to Player
 }
 
+//Player Model
 model Player {
-  id           Int          @id @default(autoincrement())
-  name         String
-  team         Team        @relation(fields: [teamId], references: [id])
-  teamId       Int
+  id      Int    @id @default(autoincrement())
+  teamId  Int
+  name    String
+  team    Teams  @relation(fields: [teamId], references: [id])
 }
+
+//Rules Model
+model Rules {
+  id           Int           @id @default(autoincrement())
+  competitionId Int
+  divisionId   Int?
+  competition  Competition   @relation(fields: [competitionId], references: [id])
+  division     Division?      @relation(fields: [divisionId], references: [id]) // Division is optional
+  borrowerInfo BorrowerInfo? // Relation to BorrowerInfo
+  finalEligibility FinalEligibility? // Relation to FinalEligibility
+}
+
+//BorrowerInfo Model
+model BorrowerInfo {
+  id         Int     @id @default(autoincrement())
+  rulesId    Int @unique
+  borrower   Boolean
+  selected   Json   // JSON field for storing selected divisions
+  applyTo    Json   // JSON field for storing apply_to divisions
+  rules      Rules   @relation(fields: [rulesId], references: [id])
+}
+
+//FinalEligibility Model
+model FinalEligibility {
+  id             Int     @id @default(autoincrement())
+  rulesId        Int @unique
+  enabled        Boolean
+  division       Json   // JSON field for storing divisions
+  borrowedPlayers Boolean
+  starredMatches Boolean
+  rounds         Json   // JSON field for storing rounds
+  rules          Rules   @relation(fields: [rulesId], references: [id])
+}
+
