@@ -17,14 +17,17 @@ datasource db {
 //Competition Model has a one-to-many relationship with Division Model
 //Division Model has a one-to-many relationship with Teams Model
 //Teams Model has a one-to-many relationship with Player Model
-
+//Competition Model has a one-to-one relationship with Rules Model
+//Division Model has a one-to-one relationship with Rules Model
+//Rules Model has a one-to-many relationship with BorrowerInfo Model
+//Rules Model has a one-to-many relationship with FinalEligibility Model
 
 //Competition Model
 model Competition {
   id        Int        @id @default(autoincrement())
   name      String
   divisions Division[] // Relation to Division
-  rules     Rules[]    // Relation to Rules
+  rule      Rules?   // Relation to Rules
 }
 
 //Division Model
@@ -34,7 +37,7 @@ model Division {
   name          String
   competition   Competition @relation(fields: [competitionId], references: [id])
   teams         Teams[]     // Relation to Teams
-  rules         Rules[]     // Relation to Rules
+  rules         Rules?     // Relation to Rules
 }
 
 //Teams Model
@@ -57,18 +60,18 @@ model Player {
 //Rules Model
 model Rules {
   id           Int           @id @default(autoincrement())
-  competitionId Int
-  divisionId   Int?
+  competitionId Int @unique
+  divisionId   Int? @unique
   competition  Competition   @relation(fields: [competitionId], references: [id])
   division     Division?      @relation(fields: [divisionId], references: [id]) // Division is optional
-  borrowerInfo BorrowerInfo? // Relation to BorrowerInfo
-  finalEligibility FinalEligibility? // Relation to FinalEligibility
+  borrowerInfos BorrowerInfo[] // Relation to BorrowerInfo
+  finalEligibility FinalEligibility[] // Relation to FinalEligibility
 }
 
 //BorrowerInfo Model
 model BorrowerInfo {
   id         Int     @id @default(autoincrement())
-  rulesId    Int @unique
+  rulesId    Int 
   borrower   Boolean
   selected   Json   // JSON field for storing selected divisions
   applyTo    Json   // JSON field for storing apply_to divisions
@@ -78,7 +81,7 @@ model BorrowerInfo {
 //FinalEligibility Model
 model FinalEligibility {
   id             Int     @id @default(autoincrement())
-  rulesId        Int @unique
+  rulesId        Int 
   enabled        Boolean
   division       Json   // JSON field for storing divisions
   borrowedPlayers Boolean

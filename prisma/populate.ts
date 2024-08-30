@@ -108,7 +108,7 @@ async function main() {
     data: {
       rulesId: rules.id,
       borrower: true,
-      selected: JSON.stringify([division1.id, division2.id]), // Contains a list of divisions that can borrow players
+      selected: JSON.stringify([division1.id, division2.id, division3.id]), // Contains a list of divisions that can borrow players
       applyTo: JSON.stringify([division2.id]), // Contains a list of divisions that can be borrowed from
     },
   });

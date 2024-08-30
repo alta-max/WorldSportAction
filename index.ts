@@ -13,7 +13,7 @@ async function main() {
         include: {
           competition: {
             include: {
-              rules: true, // Include rules in the competition
+              rule: true, // Include rules in the competition
             },
           },
         },
@@ -31,14 +31,14 @@ async function main() {
   // const divisionId = team.division.id;
   // For every competition, there is only one rule config model
   // Note: This is not rule, this is just a base model that stores info about the rules, competition and division
-  const rules = team.division.competition.rules[0];
-  // console.log('Rules:', rules);
+  const rule = team.division.competition.rule;
+  // console.log('Rules:', rule);
 
 
   //Fetch all the borrower info that belongs to that particular rule config
   const borrowerInfo = await prisma.borrowerInfo.findMany({  
     where: {
-      id: rules.id,
+      id: rule?.id,
     },
   });
 
