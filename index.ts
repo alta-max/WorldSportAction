@@ -72,7 +72,7 @@ async function main() {
     },
   });
 
-  console.log('Borrowable players:', borrowablePlayers);
+  console.log(`Borrowable players for ${team.name}`, borrowablePlayers);
   
 
 }

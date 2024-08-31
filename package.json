@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "populate": "ts-node prisma/populate.ts"
+    "populate": "ts-node prisma/populate.ts",
+    "start": "ts-node index.ts"
   },
   "keywords": [],
   "author": "",
